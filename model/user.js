@@ -7,7 +7,18 @@ async function insertData(user) {
     console.log("Inserting data...");
 
     //mengisi data  ke table user
-    await db.collection("user").insertMany(user);
+   // await db.collection("user").insertMany(user);
+       if (Array.isArray(user)) {
+          await db.collection("user").insertMany(user);
+         console.log("Dokumen berhasil disisipkan (insertMany):", result);
+       } else if (typeof user === "object") {
+          await db.collection("user").insertOne(user);
+         console.log("Dokumen berhasil disisipkan (insertOne):", result);
+       } else {
+         console.error("Tipe data tidak valid");
+       }
+
+
   } catch (error) {
     console.log(error);
     throw error;
