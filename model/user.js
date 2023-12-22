@@ -2,22 +2,15 @@ const mongo = require("../db");
 
 //create table user 
 async function insertData(user) {
+  console.log(typeof user, 'ini tipe data post userr');
+
   try {
     const db = await mongo.connect();
     console.log("Inserting data...");
 
-    //mengisi data  ke table user
-   // await db.collection("user").insertMany(user);
-       if (Array.isArray(user)) {
-          await db.collection("user").insertMany(user);
-         console.log("Dokumen berhasil disisipkan (insertMany):", result);
-       } else if (typeof user === "object") {
-          await db.collection("user").insertOne(user);
-         console.log("Dokumen berhasil disisipkan (insertOne):", result);
-       } else {
-         console.error("Tipe data tidak valid");
-       }
-
+    
+    await db.collection("user").insertMany(user);
+  
 
   } catch (error) {
     console.log(error);
