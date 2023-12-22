@@ -18,13 +18,23 @@ async function insertData(user) {
 }
 
 //get all table user
-async function fetchData( ) {
+async function fetchData( searchField, search ) {
     try {
         const db = await mongo.connect();
-        console.log("get data...");
-
-        await db.collection("user").find({}, { projection: {} }).toArray();
-     
+        
+        if (searchField && search) {
+            return await db
+            .collection("user")
+            //penggunaan [] pada key di find, untuk mengekstrasi value dari variabel untuk dijadikan key
+            .find( { [searchField]:  new RegExp(search, 'i')}, { projection: {} })
+            .toArray();
+        } else {
+            return await db
+            .collection("user")
+            .find({}, { projection: {} })
+            .toArray();
+        }
+        //mengambil seluruh data pet dari table pets
     } catch (error) {
         console.log(error);
         throw error
@@ -33,6 +43,11 @@ async function fetchData( ) {
         console.log('finished.')
       }
 }
+
+
+
+
+
 
 //get 1 table data user 
 async function fetchOneData( id ) {
