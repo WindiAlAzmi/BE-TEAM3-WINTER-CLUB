@@ -28,4 +28,4 @@
      —> false → boleh adopt -->  
          → boleh adopt → change status adopter user dan status adoption animal became true (status true) --> after that send to table adopter : (params user, dan params hewan) 
 
-3. create pet to open adopt → endpoint post  --> criteria : make status animal adoption became false 
+3. create pet to open adopt → endpoint put animal  --> criteria : make status animal adoption became false 
