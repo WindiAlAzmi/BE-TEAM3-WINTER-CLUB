@@ -29,3 +29,35 @@
          → boleh adopt → change status adopter user dan status adoption animal became true (status true) --> after that send to table adopter : (params user, dan params hewan) 
 
 3. create pet to open adopt → endpoint put animal  --> criteria : make status animal adoption became false 
+
+
+-----------------------------------------------------------------------------------------------------------------------
+
+
+Info Role :
+- Owner : Pemilik Took
+- Adopter : Mengadop Hewan
+
+
+TO DO LIST : 
+Route :
+- Route CRUD animal 
+- Route CRUD adopter 
+
+
+Model :
+# MODEL PET 
+  1. fetchAlldata  ( user is adopter ) :   params —> status adoption, search animal name (ANSWER FOR LIST OPEN ADOPT PET IN ADOPTER ) 
+
+
+# MODEL ADOPTER 
+ 1.  fetchAllData (user is owner ) :  params —> kategori animal,  ( ANSWER FOR LIST ADOPTER IN POST IN OWNER) 
+ 2. insertData (user is owner)  : params —>  user id, animal id  (ANSWER FOR APPROVE ADOPTER IN OWNER)
+       Flow : 
+        - check status adopter (user ) dan status adoption (animal) —> true(ga blh adopt) dan false(boleh adopt)
+       — false : change status adopter user dan status adoption animal became true (status true) --> after that send to table adopter (send data nya kaya structure table adopter) 
+   
+
+# MODEL ANIMAL 
+1. Make new function —> UpdateStatusDataPet (user is owner ) :  flow  —>  make status animal adoption became false , params —> id. body:{status:false}  (ANSWER CREATE PET TO OPEN ADOPT IN OWNER)
+
