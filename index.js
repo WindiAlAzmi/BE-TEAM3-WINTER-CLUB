@@ -60,37 +60,34 @@ app.post("/users", async (req, res) => {
       Di ekspress perlu menginisiasi support tambahan untuk masing-masing jenis request body, seperti diatas
     */
   try {
-    const user = req.body;
-
-    console.log(user, 'ini user');
- 
-        for (let i = 0; i < user.length; i++) {
-          const name = user[i].name;
+    const userData = req.body;
+        for (let i = 0; i < userData.length; i++) {
+          const name = userData[i].name;
           if (!name || name === "") {
             res.status(422).send("name must be filled!");
             return;
           }
-          const role = user[i].role;
+          const role = userData[i].role;
           if (!role || role === "") {
             res.status(422).send("role must be filled!");
             return;
           }
-          const behaviour = user[i].behaviour;
+          const behaviour = userData[i].behaviour;
           if (!behaviour || behaviour === "") {
             res.status(422).send("behaviour must be filled!");
             return;
           }
-          const status_adopter = user[i].status_adopter;
-          if (!status_adopter || status_adopter === "") {
+          const status_adopter = userData[i].status_adopter;
+          if (status_adopter === "") {
             res.status(422).send(" status_adopter  must be filled!");
             return;
           }
         }
 
-    const _users = await user.insertData(user);
+    const _users = await user.insertData(userData);
 
     res.status(201);
-    res.json(_users);
+    res.json({ status: "Created", data: _users });
   } catch (error) {
     console.log(error, 'ini error'); 
     res.status(422);
