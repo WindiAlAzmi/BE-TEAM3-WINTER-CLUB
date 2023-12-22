@@ -46,9 +46,6 @@ async function fetchData( searchField, search ) {
 
 
 
-
-
-
 //get 1 table data user 
 async function fetchOneData( id ) {
     try {
@@ -76,7 +73,8 @@ async function updateData(user) {
         const db = await mongo.connect();
         console.log("Update data...");
 
-        await db.collection("users").updateOne(
+         console.log(user, 'ini userr');
+        await db.collection("user").updateOne(
           { id: user.id },
           {
             $set: {
