@@ -30,12 +30,12 @@ async function fetchData( searchField, search ) {
             return await db
             .collection("user")
             //penggunaan [] pada key di find, untuk mengekstrasi value dari variabel untuk dijadikan key
-            .find( { [searchField]:  new RegExp(search, 'i')}, { projection: {} })
+            .find( { [searchField]:  new RegExp(search, 'i')}, { projection: { _id: 0 } })
             .toArray();
         } else {
             return await db
             .collection("user")
-            .find({}, { projection: {} })
+            .find({}, { projection: { _id: 0 } })
             .toArray();
         }
         //mengambil seluruh data pet dari table pets
@@ -58,7 +58,7 @@ async function fetchOneData( id ) {
 
         return await db
             .collection("user")
-            .findOne({id: id}, { projection: {} })
+            .findOne({id: id}, { projection: { _id: 0 } })
         
     } catch (error) {
         console.log(error);
@@ -73,6 +73,8 @@ async function fetchOneData( id ) {
 //update table user
 async function updateData(user) {
 
+   console.log(user, 'ini userr');
+   
     try {
         const db = await mongo.connect();
         console.log("Update data...");

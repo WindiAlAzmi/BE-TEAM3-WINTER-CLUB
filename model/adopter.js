@@ -19,11 +19,12 @@ async function insertData(adopter) {
 
 //get all table adopter
 async function fetchData() {
+    console.log('masukk  adopterss');
+
   try {
     const db = await mongo.connect();
     console.log("get data...");
-
-    await db.collection("adopter").find({}, { projection: {} }).toArray();
+    return await db.collection("adopter").find({}, { projection: { _id: 0 } }).toArray();
   } catch (error) {
     console.log(error);
     throw error;
@@ -41,7 +42,7 @@ async function fetchOneData(id) {
 
     return await db
       .collection("adopter")
-      .findOne({ id: id }, { projection: {} });
+      .findOne({ id: id }, { projection: { _id: 0 } });
   } catch (error) {
     console.log(error);
     throw error;

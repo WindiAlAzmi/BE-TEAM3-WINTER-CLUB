@@ -24,7 +24,7 @@ async function fetchData() {
     const db = await mongo.connect();
     console.log("get data...");
 
-    await db.collection("animal").find({}, { projection: {} }).toArray();
+    return await db.collection("animal").find({}, { projection:  { _id: 0 } }).toArray();
   } catch (error) {
     console.log(error);
     throw error;
@@ -40,7 +40,7 @@ async function fetchOneData(id) {
     const db = await mongo.connect();
     console.log("get 1 data...");
 
-    return await db.collection("animal").findOne({ id: id }, { projection: {} });
+    return await db.collection("animal").findOne({ id: id }, { projection:  { _id: 0 } });
   } catch (error) {
     console.log(error);
     throw error;

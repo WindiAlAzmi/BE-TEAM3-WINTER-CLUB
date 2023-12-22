@@ -27,7 +27,9 @@ app.get("/users", async (req, res) => {
   
   //mengambil data dengan fungsi fetchData
   const users = await user.fetchData(searchField, search);
-  res.json(users);
+ res.status(200).json({ status: 'berhasil', data: users });
+
+
 });
 
 /** 
@@ -42,15 +44,14 @@ app.get("/users/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   const _user = await user.fetchOneData(id);
 
-  //jika buku tidak ada
   if (_user === null) {
     // HTTP Status bisa baca di https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
     res.status(404);
     res.json("user not found");
     return;
   }
+  res.status(200).json({ status: 'berhasil', data: _user });
 
-  res.json(_user);
 });
 // curl -X POST http://localhost:3000/users --header "Content-Type: application/json" --data '{"title": "test", "author": "test"}'
 app.post("/users", async (req, res) => {
@@ -86,12 +87,12 @@ app.post("/users", async (req, res) => {
 
     const _users = await user.insertData(userData);
 
-    res.status(201);
-    res.json({ status: "Created", data: _users });
-  } catch (error) {
-    console.log(error, 'ini error'); 
-    res.status(422);
-    res.json(`user dengan id tersebut sudah ada`);
+    // res.status(201);
+    // res.json({ status: "Created", data: _users });
+     res.status(201).json({ status: 'berhasil', data: _users });
+  } catch (err) {
+     res.status(422).json({ error: err });
+
   }
 
 
@@ -102,8 +103,11 @@ app.post("/users", async (req, res) => {
 app.put("/users/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   const { name, role, behaviour, status_adopter } = req.body;
-  try {
 
+  console.log(status_adopter, 'ini status adopterr');
+
+
+  try {
     if (name === "") {
       res.status(422);
       res.json("name can't be empty if updated!");
@@ -128,23 +132,20 @@ app.put("/users/:id", async (req, res) => {
       return;
     }
 
-    // mencari buku terlebih dahulu yang mau diupdate
 
     const thatUser = await user.fetchOneData(id);
+    console.log(thatUser, 'ini that userr');
 
-    //cek jika bukunya tidak ada, memakai array indeks pertama karena hasil fetch data berupa to array
     if (!thatUser) {
       res.status(404);
       res.json("user not found!");
       return;
     }
 
-    // di validasi dulu apakah  name diberikan di req.body, kalau tidak, tidak perlu di update biar tidak null hasilnya
     if (name) {
       thatUser.name = name;
     }
 
-    // role   di validasi dulu apakah role  diberikan di req.body, kalau tidak, tidak perlu di update biar tidak null hasilnya
     if (role) {
       thatUser.role = role;
     }
@@ -152,20 +153,20 @@ app.put("/users/:id", async (req, res) => {
      if (behaviour) {
        thatUser.behaviour = behaviour;
      }
-
-     
-     if (status_adopter) {
-       thatUser.status_adopter = status_adopter;
-     }
+  
+    
+    thatUser.status_adopter = status_adopter;
 
 
     await user.updateData(thatUser);
+ 
+    console.log(thatUser, 'ini that user')
+   // res.json(thatUser);
+   res.status(201).json({ status: 'berhasil', data: thatUser });
 
-    res.json(thatUser);
-  } catch (error) {
-    res.status(422);
-    console.log("error", error);
-    res.json("tidak dapat update  user");
+  } catch (err) {
+    res.status(422).json({ error: err });
+
   }
 });
 
@@ -173,6 +174,7 @@ app.put("/users/:id", async (req, res) => {
 // curl -X DELETE http://localhost:3000/users/1
 app.delete("/users/:id", async (req, res) => {
   const id = parseInt(req.params.id);
+
 
   try {
     // mencari buku terlebih dahulu yang mau diupdate
@@ -186,7 +188,7 @@ app.delete("/users/:id", async (req, res) => {
     }
 
     await user.deleteData(id);
-    res.json(user);
+    res.status(200).json({ status: 'berhasil hapus user'});
   } catch (error) {
     res.status(422);
     res.json("tidak dapat delete buku");
@@ -196,7 +198,7 @@ app.delete("/users/:id", async (req, res) => {
 // curl -X GET http://localhost:3000/animals
 app.get("/animals", async(req, res) => {
   const animals = await animal.fetchData();
-  res.json(animals);
+   res.status(200).json({ status: 'berhasil', data: animals});
 });
 
 // curl -X GET http://localhost:3000/animals/1
@@ -209,8 +211,7 @@ app.get("/animals/:id", async(req, res) => {
     res.json("Animal not found")
     return;
   }
-
-  res.json(_animal);
+   res.status(200).json({ status: 'berhasil', data: _animal});
 })
 
 // curl -X POST http://localhost:3000/animals --header "Content-Type: application/json" --data '{"name": "test", "category": "test", "status_adoption": false}'
@@ -239,8 +240,10 @@ app.post("/animals", async (req, res) => {
     }
   } 
     const _animals = await animal.insertData(animalData); // Menggunakan animalData, sesuai dengan nama variabel di model
-    res.status(201);
-    res.json(_animals);
+    // res.status(201);
+    // res.json(_animals);
+       res.status(200).json({ status: 'berhasil'});
+
   } catch (error) {
     res.status(422);
     res.json("Error: Unable to insert animal");
@@ -249,8 +252,11 @@ app.post("/animals", async (req, res) => {
 
 app.put("/animals/:id", async (req, res) => {
   const id = parseInt(req.params.id);
-  const { name, category, status_adopter } = req.body;
-  try {
+  const { name, category, status_adoption } = req.body;
+
+  console.log(status_adoption, 'ini status adopter animals');
+
+ try {
 
     if (name === "") {
       res.status(422);
@@ -264,7 +270,7 @@ app.put("/animals/:id", async (req, res) => {
       return;
     }
 
-    if (status_adopter === "") {
+    if (status_adoption === "") {
       res.status(422);
       res.json("status_adopter  can't be empty if updated!");
       return;
@@ -286,13 +292,17 @@ app.put("/animals/:id", async (req, res) => {
       thatAnimal.category = category;
     }
 
-    if (status_adopter) {
-      thatAnimal.status_adopter = status_adopter;
-    }
+
+      console.log(thatAnimal, 'ini that animal sebelum adopter');
+
+    thatAnimal.status_adoption = status_adoption;
+
+      console.log(thatAnimal, 'ini that animal setelah adopter');
 
     await animal.updateData(thatAnimal);
 
     res.json(thatAnimal);
+
   } catch (error) {
     res.status(422);
     console.log("error", error);
@@ -331,7 +341,7 @@ app.get("/adopters", async (req, res) => {
 app.get("/adopters/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   const _adopter = await adopter.fetchOneData(id);
-
+ 
   if (_adopter === null) {
     res.status(404);
     res.json("Adopter not found");
@@ -345,35 +355,17 @@ app.post("/adopters", async (req, res) => {
   try {
     const adopterData = req.body;
 
-    // Validasi data adopter
-    const userData = adopterData.user;
-    const animalData = adopterData.animal;
+   let  {id, user, animal }  = adopterData;
 
-    // Validasi user
-    const userName = userData.name;
-    if (!userName || userName === "") {
-      res.status(422).send("User name must be filled!");
-      return;
-    }
-
-    const userBehaviour = userData.behaviour;
-    if (!userBehaviour || userBehaviour === "") {
-      res.status(422).send("User behaviour must be filled!");
-      return;
-    }
-
-    // Validasi animal
-    const animalName = animalData.name;
-    if (!animalName || animalName === "") {
-      res.status(422).send("Animal name must be filled!");
-      return;
-    }
-
+    console.log(adopterData, 'ini adopter data');
+    
+    
     // lakukan insert jika semua validasi berhasil
     const _adopters = await adopter.insertData(adopterData); 
     res.status(201);
     res.json(_adopters);
   } catch (error) {
+    console.log(error, 'ini error');
     res.status(422);
     res.json("Error: Unable to insert adopter");
   }
