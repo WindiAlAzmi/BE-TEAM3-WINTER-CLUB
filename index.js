@@ -2,12 +2,13 @@
 
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = 3300;
 
 //import file user yang berisikan fungsi2 yang diexport
 const user = require("./model/user");
 const animal = require("./model/animal");
 const adopter = require("./model/adopter");
+
 
 
 // membuat express dapat menerima request body berupa JSON
@@ -23,7 +24,7 @@ app.get("/", (req, res) => {
 app.get("/users", async (req, res) => {
   //mengambil query yang dikirim
   const { searchField, search } = req.query;
-
+  
   //mengambil data dengan fungsi fetchData
   const users = await user.fetchData(searchField, search);
   res.json(users);
@@ -51,7 +52,6 @@ app.get("/users/:id", async (req, res) => {
 
   res.json(_user);
 });
-
 // curl -X POST http://localhost:3000/users --header "Content-Type: application/json" --data '{"title": "test", "author": "test"}'
 app.post("/users", async (req, res) => {
   /** 
@@ -62,36 +62,42 @@ app.post("/users", async (req, res) => {
   try {
     const user = req.body;
 
-    for (let i = 0; i < user.length; i++) {
-      const name = user[i].name;
-      if (!name || name === "") {
-        res.status(422).send("name must be filled!");
-        return;
-      }
-      const role = user[i].role;
-      if (!role || role === "") {
-       res.status(422).send("role must be filled!");
-       return;
-     }
-       const behaviour = user[i].behaviour;
-       if (!behaviour || behaviour === "") {
-         res.status(422).send("behaviour must be filled!");
-         return;
-       }
-        const status_adopter = user[i].status_adopter;
-         if (!status_adopter || status_adopter === "") {
-           res.status(422).send(" status_adopter  must be filled!");
-           return;
-         }
-    }
+    console.log(user, 'ini user');
+ 
+        for (let i = 0; i < user.length; i++) {
+          const name = user[i].name;
+          if (!name || name === "") {
+            res.status(422).send("name must be filled!");
+            return;
+          }
+          const role = user[i].role;
+          if (!role || role === "") {
+            res.status(422).send("role must be filled!");
+            return;
+          }
+          const behaviour = user[i].behaviour;
+          if (!behaviour || behaviour === "") {
+            res.status(422).send("behaviour must be filled!");
+            return;
+          }
+          const status_adopter = user[i].status_adopter;
+          if (!status_adopter || status_adopter === "") {
+            res.status(422).send(" status_adopter  must be filled!");
+            return;
+          }
+        }
 
-    const _users = await user.insertData(users);
+    const _users = await user.insertData(user);
+
     res.status(201);
     res.json(_users);
   } catch (error) {
+    console.log(error, 'ini error'); 
     res.status(422);
-    res.json(`buku dengan id tersebut sudah ada`);
+    res.json(`user dengan id tersebut sudah ada`);
   }
+
+
 });
 
 // Untuk mencoba melihat response api ketika memangngil route "/"
@@ -162,7 +168,7 @@ app.put("/users/:id", async (req, res) => {
   } catch (error) {
     res.status(422);
     console.log("error", error);
-    res.json("tidak dapat update buku");
+    res.json("tidak dapat update  user");
   }
 });
 

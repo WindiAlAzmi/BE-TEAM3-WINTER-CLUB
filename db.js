@@ -3,12 +3,12 @@
 
 // Config
 const { MongoClient, ServerApiVersion } = require("mongodb");
-const username = "testdb123";
-const password = "test123";
-const database = "pet";
+const username = "windiazmy";
+const password = "dontsleep";
+const database = "adopt-pet";
 
 // replace this uri with your own
-const uri = `mongodb+srv://${username}:${password}@${database}.tgw9sm7.mongodb.net/`
+const uri = `mongodb+srv://${username}:${password}@cluster0.ostvtbz.mongodb.net/?retryWrites=true&w=majority`
 const client = new MongoClient(uri);
 // Don't modify this part ##
 
