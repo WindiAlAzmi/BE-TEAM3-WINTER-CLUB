@@ -221,25 +221,28 @@ app.post("/animals", async (req, res) => {
   try {
     const animal = req.body;
 
+    console.log(animal, 'halo')
+
     // validasi data
-    const name = animal.name;
-    if (!name || name === "") {
+    for (let i = 0; i < animal.length; i++) {
+      const name = animal[i].name;
+      if (!name || name === "") {
       res.status(422).send("Name must be filled!");
       return;
     }
 
-    const category = animal.category;
-    if (!category || category === "") {
+      const category = animal[i].category;
+      if (!category || category === "") {
       res.status(422).send("Category must be filled!");
       return;
     }
 
-    const status_adoption = animal.status_adoption;
-    if (status_adoption === undefined) {
+      const status_adoption = animal[i].status_adoption;
+      if (status_adoption === undefined) {
       res.status(422).send("Status adoption must be provided!");
       return;
     }
-
+  } 
     const _animals = await animal.insertData(animal); // Menggunakan animal, sesuai dengan nama variabel di model
     res.status(201);
     res.json(_animals);
@@ -249,6 +252,80 @@ app.post("/animals", async (req, res) => {
   }
 });
 
+app.put("/animals/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const { name, category, status_adopter } = req.body;
+  try {
+
+    if (name === "") {
+      res.status(422);
+      res.json("name can't be empty if updated!");
+      return;
+    }
+
+    if (category === "") {
+      res.status(422);
+      res.json("category can't be empty if updated!");
+      return;
+    }
+
+    if (status_adopter === "") {
+      res.status(422);
+      res.json("status_adopter  can't be empty if updated!");
+      return;
+    }
+
+    const thatAnimal = await animal.fetchOneData(id);
+
+    if (!thatAnimal) {
+      res.status(404);
+      res.json("user not found!");
+      return;
+    }
+
+    if (name) {
+      thatUser.name = name;
+    }
+
+    if (category) {
+      thatUser.category = category;
+    }
+
+    if (status_adopter) {
+      thatUser.status_adopter = status_adopter;
+    }
+
+    await user.updateData(thatAnimal);
+
+    res.json(thatAnimal);
+  } catch (error) {
+    res.status(422);
+    console.log("error", error);
+    res.json("tidak dapat update  user");
+  }
+});
+
+app.delete("/animals/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+
+  try {
+    // mencari buku terlebih dahulu yang mau diupdate
+    const thatAnimal = await animal.fetchOneData(id);
+
+    //cek jika bukunya tidak ada, memakai array indeks pertama karena hasil fetch data berupa to array
+    if (!thatAnimal) {
+      res.status(404);
+      res.json("animal not found!");
+      return;
+    }
+
+    await animal.deleteData(id);
+    res.json(animal);
+  } catch (error) {
+    res.status(422);
+    res.json("tidak dapat delete hewan");
+  }
+});
 
 // rute untuk adopter
 app.get("/adopters", async (req, res) => {
@@ -304,6 +381,96 @@ app.post("/adopters", async (req, res) => {
   } catch (error) {
     res.status(422);
     res.json("Error: Unable to insert adopter");
+  }
+});
+
+app.put("/adopters/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const { name, role, behaviour, status_adopter } = req.body;
+  try {
+
+    if (name === "") {
+      res.status(422);
+      res.json("name can't be empty if updated!");
+      return;
+    }
+
+    if (role === "") {
+      res.status(422);
+      res.json("role can't be empty if updated!");
+      return;
+    }
+
+    if (behaviour === "") {
+      res.status(422);
+      res.json("behaviour can't be empty if updated!");
+      return;
+    }
+
+    if (status_adopter === "") {
+      res.status(422);
+      res.json("status_adopter  can't be empty if updated!");
+      return;
+    }
+
+    const thatUser = await user.fetchOneData(id);
+
+    //cek jika bukunya tidak ada, memakai array indeks pertama karena hasil fetch data berupa to array
+    if (!thatUser) {
+      res.status(404);
+      res.json("user not found!");
+      return;
+    }
+
+    // di validasi dulu apakah  name diberikan di req.body, kalau tidak, tidak perlu di update biar tidak null hasilnya
+    if (name) {
+      thatUser.name = name;
+    }
+
+    // role   di validasi dulu apakah role  diberikan di req.body, kalau tidak, tidak perlu di update biar tidak null hasilnya
+    if (role) {
+      thatUser.role = role;
+    }
+
+     if (behaviour) {
+       thatUser.behaviour = behaviour;
+     }
+
+     
+     if (status_adopter) {
+       thatUser.status_adopter = status_adopter;
+     }
+
+
+    await adopter.updateData(thatAdopter);
+
+    res.json(thatAdopter);
+  } catch (error) {
+    res.status(422);
+    console.log("error", error);
+    res.json("tidak dapat update  adopter");
+  }
+});
+
+app.delete("/adopters/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+
+  try {
+    // mencari buku terlebih dahulu yang mau diupdate
+    const thatAdopter = await user.fetchOneData(id);
+
+    //cek jika bukunya tidak ada, memakai array indeks pertama karena hasil fetch data berupa to array
+    if (!thatAdopter) {
+      res.status(404);
+      res.json("adopter not found!");
+      return;
+    }
+
+    await adopter.deleteData(id);
+    res.json(adopter);
+  } catch (error) {
+    res.status(422);
+    res.json("tidak dapat delete adopter");
   }
 });
 app.listen(port, () => {
