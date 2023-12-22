@@ -192,7 +192,116 @@ app.delete("/users/:id", async (req, res) => {
   }
 });
 
+// curl -X GET http://localhost:3000/animals
+app.get("/animals", async(req, res) => {
+  const animals = await animal.fetchData();
+  res.json(animals);
+});
 
+// curl -X GET http://localhost:3000/animals/1
+app.get("/animals/:id", async(req, res) => {
+  const id = parseInt(req.params.id);
+  const _animal = await animal.fetchOneData(id);
+
+  if(_animal === null) {
+    res.status(404);
+    res.json("Animal not found")
+    return;
+  }
+
+  res.json(_animal);
+})
+
+// curl -X POST http://localhost:3000/animals --header "Content-Type: application/json" --data '{"name": "test", "category": "test", "status_adoption": false}'
+app.post("/animals", async (req, res) => {
+  try {
+    const animal = req.body;
+
+    // validasi data
+    const name = animal.name;
+    if (!name || name === "") {
+      res.status(422).send("Name must be filled!");
+      return;
+    }
+
+    const category = animal.category;
+    if (!category || category === "") {
+      res.status(422).send("Category must be filled!");
+      return;
+    }
+
+    const status_adoption = animal.status_adoption;
+    if (status_adoption === undefined) {
+      res.status(422).send("Status adoption must be provided!");
+      return;
+    }
+
+    const _animals = await animal.insertData(animal); // Menggunakan animal, sesuai dengan nama variabel di model
+    res.status(201);
+    res.json(_animals);
+  } catch (error) {
+    res.status(422);
+    res.json("Error: Unable to insert animal");
+  }
+});
+
+
+// rute untuk adopter
+app.get("/adopters", async (req, res) => {
+  const adopters = await adopter.fetchData();
+  res.json(adopters);
+});
+
+app.get("/adopters/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const _adopter = await adopter.fetchOneData(id);
+
+  if (_adopter === null) {
+    res.status(404);
+    res.json("Adopter not found");
+    return;
+  }
+
+  res.json(_adopter);
+});
+
+app.post("/adopters", async (req, res) => {
+  try {
+    const adopterData = req.body;
+
+    // Validasi data adopter
+    const userData = adopterData.user;
+    const animalData = adopterData.animal;
+
+    // Validasi user
+    const userName = userData.name;
+    if (!userName || userName === "") {
+      res.status(422).send("User name must be filled!");
+      return;
+    }
+
+    const userBehaviour = userData.behaviour;
+    if (!userBehaviour || userBehaviour === "") {
+      res.status(422).send("User behaviour must be filled!");
+      return;
+    }
+
+    // Validasi animal
+    const animalName = animalData.name;
+    if (!animalName || animalName === "") {
+      res.status(422).send("Animal name must be filled!");
+      return;
+    }
+
+    // lakukan insert jika semua validasi berhasil
+    const _adopters = await adopter.insertData(adopterData); 
+    res.status(201);
+    res.json(_adopters);
+  } catch (error) {
+    res.status(422);
+    res.json("Error: Unable to insert adopter");
+  }
+});
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
