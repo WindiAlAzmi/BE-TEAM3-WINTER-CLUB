@@ -26,11 +26,7 @@ app.get("/users", async (req, res) => {
   const { searchField, search } = req.query;
   
   //mengambil data dengan fungsi fetchData
-  const pets = await user.fetchData(searchField, search);
-
-
-
-  console.log(users, 'ini users');
+  const users = await user.fetchData(searchField, search);
   res.json(users);
 });
 
