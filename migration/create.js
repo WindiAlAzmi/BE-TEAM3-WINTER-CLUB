@@ -7,12 +7,12 @@ async function createCollection() {
     console.log("Create Collection...");
 
     //create table
-    await db.createCollection("books");
-    await db.createCollection("renter");
+    await db.createCollection("user");
+    await db.createCollection("animal");
 
     // tambahkan createindex untuk membuat index unik agar tidak dapat menginput id yang sama
-    await db.collection("books").createIndex({ id: 1 }, { unique: true });
-    await db.collection("renter").createIndex({ id: 1 }, { unique: true });
+    await db.collection("user").createIndex({ id: 1 }, { unique: true });
+    await db.collection("animal").createIndex({ id: 1 }, { unique: true });
   } catch (error) {
     console.log(error);
   } finally {

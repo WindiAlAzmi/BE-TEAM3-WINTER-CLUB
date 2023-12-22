@@ -10,6 +10,7 @@ const animal = require("./model/animal");
 const adopter = require("./model/adopter");
 
 
+
 // membuat express dapat menerima request body berupa JSON
 app.use(express.json());
 
@@ -23,9 +24,10 @@ app.get("/", (req, res) => {
 app.get("/users", async (req, res) => {
   //mengambil query yang dikirim
   const { searchField, search } = req.query;
-
+  
   //mengambil data dengan fungsi fetchData
-  const users = await user.fetchData(searchField, search);
+  const users = await user.fetchData();
+  console.log(users, 'ini users');
   res.json(users);
 });
 

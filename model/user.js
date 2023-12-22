@@ -23,10 +23,7 @@ async function fetchData( ) {
         const db = await mongo.connect();
         console.log("get data...");
 
-            await db
-            .collection("user")
-            .find({}, { projection: {} })
-            .toArray();
+        await db.collection("user").find({}, { projection: {} }).toArray();
      
     } catch (error) {
         console.log(error);
