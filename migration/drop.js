@@ -8,8 +8,10 @@ async function dropCollection() {
     console.log("Drop Collection...");
 
     //drop database satu2
-    await db.collection("books").drop();
-    await db.collection("renter").drop();
+    await db.collection("adopter").drop();
+    await db.collection("animal").drop();
+    await db.collection("user").drop();
+
   } catch (error) {
     console.log(error);
   } finally {
