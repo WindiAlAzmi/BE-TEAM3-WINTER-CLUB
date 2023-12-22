@@ -4,10 +4,11 @@ const mongo = require("../db");
 async function insertData(animal) {
   try {
     const db = await mongo.connect();
+
     console.log("Inserting data...");
 
     //mengisi data  ke table animal
-    await db.collection("animal").insertMany(animal);
+    return await db.collection("animal").insertMany(animal);
   } catch (error) {
     console.log(error);
     throw error;

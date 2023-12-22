@@ -216,31 +216,29 @@ app.get("/animals/:id", async(req, res) => {
 // curl -X POST http://localhost:3000/animals --header "Content-Type: application/json" --data '{"name": "test", "category": "test", "status_adoption": false}'
 app.post("/animals", async (req, res) => {
   try {
-    const animal = req.body;
-
-    console.log(animal, 'halo')
+    const animalData = req.body;
 
     // validasi data
-    for (let i = 0; i < animal.length; i++) {
-      const name = animal[i].name;
+    for (let i = 0; i < animalData.length; i++) {
+      const name = animalData[i].name;
       if (!name || name === "") {
       res.status(422).send("Name must be filled!");
       return;
     }
 
-      const category = animal[i].category;
+      const category = animalData[i].category;
       if (!category || category === "") {
       res.status(422).send("Category must be filled!");
       return;
     }
 
-      const status_adoption = animal[i].status_adoption;
+      const status_adoption = animalData[i].status_adoption;
       if (status_adoption === undefined) {
       res.status(422).send("Status adoption must be provided!");
       return;
     }
   } 
-    const _animals = await animal.insertData(animal); // Menggunakan animal, sesuai dengan nama variabel di model
+    const _animals = await animal.insertData(animalData); // Menggunakan animalData, sesuai dengan nama variabel di model
     res.status(201);
     res.json(_animals);
   } catch (error) {
@@ -281,18 +279,18 @@ app.put("/animals/:id", async (req, res) => {
     }
 
     if (name) {
-      thatUser.name = name;
+      thatAnimal.name = name;
     }
 
     if (category) {
-      thatUser.category = category;
+      thatAnimal.category = category;
     }
 
     if (status_adopter) {
-      thatUser.status_adopter = status_adopter;
+      thatAnimal.status_adopter = status_adopter;
     }
 
-    await user.updateData(thatAnimal);
+    await animal.updateData(thatAnimal);
 
     res.json(thatAnimal);
   } catch (error) {
